@@ -1,0 +1,34 @@
+  services:
+    db:
+      image: postgres:latest
+      container_name: snappost_postgres
+      restart: always
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: 12345
+        POSTGRES_DB: snappost
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+
+    api:
+      build: .
+      container_name: snappost_api
+      depends_on:
+        - db
+      environment:
+        DATABASE_URL: postgresql+asyncpg://postgres:12345@db:5432/snappost
+        POSTGRES_HOST: db
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: 12345
+        POSTGRES_DB: snappost
+        POSTGRES_PORT: 5432
+        FASTAPI_PORT: 8000
+      ports:
+        - "8080:8000"
+      volumes:
+        - .:/app
+
+  volumes:
+    postgres_data:
