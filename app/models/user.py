@@ -9,6 +9,13 @@ class User(SQLModel, table=True):
     password: str
     age: int
 
+
+class RegsiterInput(SQLModel):
+    username: str
+    password: str
+    age: int
+
+
 class LoginInput(SQLModel):
     username: str
     password: str
