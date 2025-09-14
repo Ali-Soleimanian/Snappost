@@ -1,9 +1,11 @@
 from .user import User, LoginInput, RegsiterInput
-from .post import Post
+from .post import Post, PostInput, ViewPost
 
 __all__ = [
     "User",
     "Post",
     "LoginInput",
-    "RegsiterInput"
+    "RegsiterInput",
+    "PostInput",
+    "ViewPost"
 ]

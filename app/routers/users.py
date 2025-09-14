@@ -6,7 +6,7 @@ from sqlalchemy import select
 
 router = APIRouter(prefix="/user", tags=["User"])
 
-@router.post("/register", tags=["register"])
+@router.post("/register")
 async def register(credetials: RegsiterInput, session: SessionDep):
     user = User(**credetials.dict())
     check_username = await session.execute(select(User).where(User.username == credetials.username))
@@ -24,8 +24,7 @@ async def register(credetials: RegsiterInput, session: SessionDep):
 
 @router.post("/login")
 async def login(data: LoginInput, session: SessionDep):
-    result = await session.execute(select(User).where(User.username == data.username, User.password == data.password)
-    )
+    result = await session.execute(select(User).where(User.username == data.username, User.password == data.password))
     user = result.scalar_one_or_none()
     
     if user is None:
