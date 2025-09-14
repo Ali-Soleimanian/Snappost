@@ -6,6 +6,7 @@ from typing import Optional
 
 class Post(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    username: str
     title: str
     text: str
     date: datetime = Field(default_factory=datetime.utcnow)
@@ -20,5 +21,5 @@ class PostInput(SQLModel):
 
 
 class ViewPost(SQLModel):
-    owner_username: str
+    username: str
     title: str

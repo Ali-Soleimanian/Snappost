@@ -20,4 +20,14 @@ async def create_post(data: PostInput, session: SessionDep):
         return {
             "message": "post created sucsesfuly",
             "post": post
-            }
+        }
+
+
+@router.post("/view", description="what post do you want to see")
+async def view_post(data: ViewPost, session: SessionDep):
+    check = await session.execute(select(Post).where(Post.username == data.username, Post.title == data.title))
+    posts = check.scalars().all()
+    if not posts:
+        raise HTTPException(status_code=403, detail="post not found")
+    else:
+        return posts
