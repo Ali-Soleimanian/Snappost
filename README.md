@@ -23,7 +23,7 @@ docker compose up -d --build
 ### Local Development
 1. Clone the repo:
    ```bash
-   git clone https://github.com/yourusername/snappost.git
+   git clone https://github.com/Ali-Soleimanian/Snappost
    cd snappost
    ```
 2. Create and activate a virtual environment:
