@@ -18,8 +18,3 @@ class PostInput(SQLModel):
     password: str
     title: str
     text: str
-
-
-class ViewPost(SQLModel):
-    username: str
-    title: str

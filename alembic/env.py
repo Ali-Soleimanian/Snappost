@@ -12,8 +12,7 @@ from sqlmodel import SQLModel
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import models
-from app.models.user import User
-from app.models.post import Post
+from app.models import *
 from app.db.engine import DATABASE_URL
 
 config = context.config

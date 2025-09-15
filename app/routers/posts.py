@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException
-from app.models import Post, PostInput, ViewPost, User
+from fastapi import APIRouter, HTTPException, Query
+from app.models import Post, PostInput, User
 from app.dependencies import SessionDep
 from sqlalchemy import select
 
@@ -24,8 +24,8 @@ async def create_post(data: PostInput, session: SessionDep):
 
 
 @router.post("/view", description="what post do you want to see")
-async def view_post(data: ViewPost, session: SessionDep):
-    check = await session.execute(select(Post).where(Post.username == data.username, Post.title == data.title))
+async def view_post(session: SessionDep, username: str = Query(alias="owner username"), title: str = Query(alias="target post title")):
+    check = await session.execute(select(Post).where(Post.username == username, Post.title == title))
     posts = check.scalars().all()
     if not posts:
         raise HTTPException(status_code=403, detail="post not found")
