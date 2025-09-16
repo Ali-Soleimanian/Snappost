@@ -2,17 +2,24 @@ from fastapi import APIRouter, HTTPException, Query
 from app.models import Post, PostInput, User
 from app.dependencies import SessionDep
 from sqlalchemy import select
+from argon2 import PasswordHasher
 
 router = APIRouter(prefix="/post", tags=["Post"])
+
+ph = PasswordHasher()
 
 @router.post("/create", description="post something")
 async def create_post(data: PostInput, session: SessionDep):
     post = Post(**data.dict())
-    check_user = await session.execute(select(User).where(User.username == data.username, User.password == data.password))
+    check_user = await session.execute(select(User).where(User.username == data.username))
     result = check_user.scalar_one_or_none()
     if result == None:
         raise HTTPException(status_code=401, detail="Invalid username or password")
     else:
+        try:
+            ph.verify(result.password, data.password)
+        except:
+            raise HTTPException(status_code=401, detail="Invalid username or password")
         post.owner_id = result.id
         session.add(post)
         await session.commit()
