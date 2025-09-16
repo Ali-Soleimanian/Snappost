@@ -7,7 +7,6 @@ app = FastAPI(title="snappost",
             version="1.0.0")
 
 
-# include user and post router
 app.include_router(user_router)
 app.include_router(post_router)
 

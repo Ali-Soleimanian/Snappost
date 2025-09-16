@@ -30,4 +30,8 @@ async def view_post(session: SessionDep, username: str = Query(alias="owner user
     if not posts:
         raise HTTPException(status_code=403, detail="post not found")
     else:
+        for post in posts:
+            post.views += 1
+            session.add(post)
+        await session.commit()
         return posts

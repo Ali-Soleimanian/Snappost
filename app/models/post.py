@@ -11,6 +11,7 @@ class Post(SQLModel, table=True):
     text: str
     date: datetime = Field(default_factory=datetime.utcnow)
     owner_id: int
+    views: int = Field(default=0)
 
 
 class PostInput(SQLModel):
