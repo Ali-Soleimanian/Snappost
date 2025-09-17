@@ -1,7 +1,6 @@
-from fastapi import APIRouter, HTTPException, Query
-from app.models import Post, PostInput, User
+from fastapi import APIRouter, Query
+from app.models import PostInput
 from app.dependencies import SessionDep
-from sqlalchemy import select
 from app.repositories import PostRepository
 from argon2 import PasswordHasher
 

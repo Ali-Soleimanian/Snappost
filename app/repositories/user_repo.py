@@ -26,7 +26,7 @@ class UserRepository:
             await self.session.refresh(user)
             return user
 
-    async def check_user(self, data):
+    async def authenticate_user(self, data):
         username_existance = await self.check_username(data)
         user =  username_existance.scalars().all()
         if user is None:

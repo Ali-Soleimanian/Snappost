@@ -1,7 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from app.dependencies import SessionDep
-from app.models import User, LoginInput, RegsiterInput
-from sqlalchemy import select
+from app.models import LoginInput, RegsiterInput
 from argon2 import PasswordHasher
 from app.repositories import UserRepository
 
@@ -21,7 +20,7 @@ async def register(data: RegsiterInput, session: SessionDep):
 @router.post("/login")
 async def login(data: LoginInput, session: SessionDep):
     repo = UserRepository(session)
-    user = await repo.check_user(data)
+    user = await repo.authenticate_user(data)
     return {
         "message": f"hello {user.username}, you are logged in successfully",
         "user": user
