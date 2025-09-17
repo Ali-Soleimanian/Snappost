@@ -21,6 +21,6 @@ async def write_post(data: PostInput, session: SessionDep):
 
 @router.post("/view", description="what post do you want to see")
 async def view_post(session: SessionDep, username: str = Query(alias="owner username"), title: str = Query(alias="target post title")):
-        repo = PostRepository(session)
-        posts = await repo.get_post(username, title)
-        return posts
+    repo = PostRepository(session)
+    posts = await repo.get_post(username, title)
+    return posts
