@@ -4,9 +4,9 @@
       container_name: snappost_postgres
       restart: always
       environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: 12345
-        POSTGRES_DB: snappost
+        POSTGRES_USER: $POSTGRES_USER
+        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+        POSTGRES_DB: $POSTGRES_DB
       ports:
         - "5432:5432"
       volumes:
@@ -18,13 +18,16 @@
       depends_on:
         - db
       environment:
-        DATABASE_URL: postgresql+asyncpg://postgres:12345@db:5432/snappost
-        POSTGRES_HOST: db
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: 12345
-        POSTGRES_DB: snappost
+        DATABASE_URL: $DATABASE_URL
+        POSTGRES_HOST: $POSTGRES_HOST
+        POSTGRES_USER: $POSTGRES_USER
+        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+        POSTGRES_DB: $POSTGRES_DB
         POSTGRES_PORT: 5432
         FASTAPI_PORT: 8000
+        SECRET_KEY: ${SECRET_KEY}
+        ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
+        ALGORITHM: ${ALGORITHM}
       ports:
         - "8000:8000"
       volumes:

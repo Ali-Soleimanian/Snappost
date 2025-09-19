@@ -1,40 +1,28 @@
-from fastapi import HTTPException
+from app.exeptions import *
 from sqlalchemy import select
 from argon2 import PasswordHasher
 from app.models import User, Post
+from app.repositories import UserRepository
 
 
 class PostRepository:
     def __init__(self, session):
         self.session = session
         self.ph = PasswordHasher()
+        self.user_repo = UserRepository(self.session)
 
-    async def check_username(self, data):
-        check = await self.session.execute(select(User).where(User.username == data.username))
-        return  check
-
-    async def create_post(self, data):
-        post = Post(**data.dict())
-        username_existance = await self.check_username(data)
-        result = username_existance.scalar_one_or_none()
-        if result == None:
-            raise HTTPException(status_code=401, detail="Invalid username or password")
-        else:
-            try:
-                self.ph.verify(result.password, data.password)
-            except:
-                raise HTTPException(status_code=401, detail="Invalid username or password")
-            post.owner_id = result.id
-            self.session.add(post)
-            await self.session.commit()
-            await self.session.refresh(post)
+    async def create_post(self, title: str, text: str, owner_id: int, username: str):
+        post = Post(title=title, text=text, owner_id=owner_id, username=username)
+        self.session.add(post)
+        await self.session.commit()
+        await self.session.refresh(post)
         return post
 
     async def get_post(self, username, title):
         check = await self.session.execute(select(Post).where(Post.username == username, Post.title == title))
         posts = check.scalars().all()
         if not posts:
-            raise HTTPException(status_code=403, detail="post not found")
+            raise PostNotFound
         else:
             for post in posts:
                 post.views += 1

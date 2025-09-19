@@ -48,7 +48,15 @@ docker compose up -d --build
 ## Environment Variables
 Set your database connection in `.env`:
 ```
-DATABASE_URL = "postgresql+asyncpg://username:password@localhost:5432/dbname"
+DATABASE_URL="postgresql+asyncpg://username:password@localhost:5432/dbname"
+POSTGRES_HOST=host
+POSTGRES_USER=username
+POSTGRES_PASSWORD=password
+POSTGRES_DB=bd_name
+SECRET_KEY="your_jwt_secretkey"
+ACCESS_TOKEN_EXPIRE_MINUTES=token_expire_time(int)
+ALGORITHM=hash_algoritm
+
 ```
 
 ## License

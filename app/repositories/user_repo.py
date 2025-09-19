@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from app.exeptions import *
 from sqlalchemy import select
 from argon2 import PasswordHasher
 from app.models import User
@@ -15,9 +15,9 @@ class UserRepository:
 
     async def create_user(self, data):
         username_existance = await self.check_username(data)
-        result =  username_existance.scalars().all()
+        result = username_existance.scalar_one_or_none()
         if result != None:
-            raise HTTPException(status_code=402, detail="username already exist")
+            raise UsernameAlreadyExist
         else:
             hashed_password = self.ph.hash(data.password)
             user = User(username=data.username, password=hashed_password, age=data.age)
@@ -28,12 +28,12 @@ class UserRepository:
 
     async def authenticate_user(self, data):
         username_existance = await self.check_username(data)
-        user =  username_existance.scalars().all()
+        user =  username_existance.scalar_one_or_none()
         if user is None:
-            raise HTTPException(status_code=401, detail="Invalid username or password")
+            raise InvalidUsernameOrPassword
         else:
             try:
                 self.ph.verify(user.password, data.password)
             except:
-                raise HTTPException(status_code=401, detail="Invalid username or password")
+                raise InvalidUsernameOrPassword
             return user
