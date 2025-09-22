@@ -3,7 +3,7 @@ set -e
 
 wait_for_postgres() {
   echo "Waiting for PostgreSQL to be ready..."
-  echo "Host: $POSTGRES_HOST"
+  echo "Host: $DOCKER_POSTGRES_HOST"
   echo "Port: ${POSTGRES_PORT:-5432}"
   echo "User: $POSTGRES_USER"
   echo "DB: $POSTGRES_DB"

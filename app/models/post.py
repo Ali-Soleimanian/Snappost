@@ -12,3 +12,4 @@ class Post(SQLModel, table=True):
     date: datetime = Field(default_factory=datetime.utcnow)
     owner_id: int
     views: int = Field(default=0)
+    filename: Optional[str] = Field(default=None)

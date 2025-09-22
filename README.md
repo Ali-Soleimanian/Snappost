@@ -8,6 +8,7 @@ A FastAPI-based social media backend with PostgreSQL, Alembic migrations, and Do
 - Async database operations with SQLModel
 - Alembic migrations for schema management
 - Docker and Docker Compose for easy deployment
+ - Media upload/download backed by MinIO (S3-compatible)
 
 ## Quick Start
 
@@ -46,7 +47,7 @@ docker compose up -d --build
 
 
 ## Environment Variables
-Set your database connection in `.env`:
+Create a `.env` file in the project root:
 ```
 DATABASE_URL="postgresql+asyncpg://username:password@localhost:5432/dbname"
 POSTGRES_HOST=host
@@ -56,8 +57,30 @@ POSTGRES_DB=bd_name
 SECRET_KEY="your_jwt_secretkey"
 ACCESS_TOKEN_EXPIRE_MINUTES=token_expire_time(int)
 ALGORITHM=hash_algoritm
+ 
+# MinIO / S3
+MINIO_ENDPOINT=localhost:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
 
+# Upload limits and allowed types
+MAX_FILE_SIZE=10485760
+ALLOWED_IMAGE_TYPES='["image/gif","image/png","image/jpeg"]'
+ALLOWED_VIDEO_TYPES='["video/mp4","video/x-msvideo","video/quicktime","video/x-matroska"]'
 ```
+
+## API Overview
+
+### Auth
+- `POST /user/register`
+- `POST /user/login`
+
+### Posts
+- `POST /post/create` form fields: `Title`, `Text`, `media` (file)
+- `GET /post/view` query: `owner_username`, `target_post_title`
+- `GET /post/download/{filename}`
+
+When running locally with Docker, MinIO is expected at `http://localhost:9000`.
 
 ## License
 MIT
