@@ -1,5 +1,6 @@
 from app.exeptions import *
 from sqlalchemy import select
+from argon2 import PasswordHasher
 from app.models import Post
 from app.repositories import UserRepository
 
@@ -7,14 +8,14 @@ from app.repositories import UserRepository
 class PostRepository:
     def __init__(self, session):
         self.session = session
+        self.ph = PasswordHasher()
         self.user_repo = UserRepository(self.session)
 
     async def create_post(self, title: str, text: str, owner_id: int, username: str, filename: str):
         check = await self.session.execute(select(Post).where(Post.username == username, Post.title == title))
         result = check.scalar_one_or_none()
         if result:
-            # Use corrected exception name; keep compatibility alias in exceptions module
-            raise PostTitleAlreadyExists 
+            raise PostTitleAlreadyExsist 
         post = Post(title=title, text=text, owner_id=owner_id, username=username, filename=filename)
         self.session.add(post)
         await self.session.commit()
